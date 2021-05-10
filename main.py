@@ -31,7 +31,6 @@ async def get_stick_bugged_lol(ctx, url:Optional[str]):
         else:
             url = ctx.message.attachments[0].url
     img_bytes = await get_bytes(url)
-    img_bytes.seek(0)
     img = Image.open(img_bytes,'r')
     await ctx.send('20% done.')
     stick_bug = StickBug(img)
