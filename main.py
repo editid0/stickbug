@@ -7,7 +7,7 @@ from dotenv import load_dotenv
 import os
 from discord.ext import commands
 
-intents = discord.Intents(members=False,presences=False,bans=False,messages=True,emojis=False,guilds=False,integrations=False,invites=False,reactions=False,typing=False,voice_states=False,webhooks=False)
+intents = discord.Intents(members=False,presences=False,bans=False,messages=True,emojis=False,guilds=True,integrations=False,invites=False,reactions=False,typing=False,voice_states=False,webhooks=False)
 
 bot = commands.Bot(command_prefix='gsbl ', intents=intents)
 
