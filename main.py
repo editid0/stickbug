@@ -30,7 +30,7 @@ async def get_stick_bugged_lol(ctx, url:Optional[str]):
             return await ctx.send('You didn\'t provide an attachment or image url.')
         else:
             url = ctx.message.attachments[0].url
-    img = Image.frombytes('RGBA', await get_bytes(url), 'raw')
+    img = Image.frombytes('RGBA', (1024,1024),await get_bytes(url), 'raw')
     await ctx.send('20% done.')
     stick_bug = StickBug(img)
     stick_bug.video_resolution = (1280, 720)
