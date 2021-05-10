@@ -32,15 +32,24 @@ async def get_stick_bugged_lol(ctx, url:Optional[str]):
         else:
             url = ctx.message.attachments[0].url
     img_bytes = await get_bytes(url)
+    msg = await ctx.send('Fetched image. (25%)')
     img_bytes = io.BytesIO(img_bytes)
     img_bytes.seek(0)
     img = Image.open(img_bytes,'r')
-    await ctx.send('20% done.')
+    await msg.edit(content='Converted image. (50%)')
     stick_bug = StickBug(img)
     stick_bug.video_resolution = (1280, 720)
-    stick_bug.save_video(f'vid-{ctx.message.id}.mp4')
+    await msg.edit(content='Set video resolution. (75%)')
+    async with ctx.typing:
+        stick_bug.save_video(f'vid-{ctx.message.id}.mp4')
+    await msg.edit('Processed video. (100%)')
     file = discord.File(f'vid-{ctx.message.id}.mp4')
     await ctx.send(file=file)
+    await msg.delete()
+    try:
+        os.remove(f'vid-{ctx.message.id}.mp4')
+    except:
+        print('Failed to delete file.')
 
 try:
     token = open('token.txt').read().strip()
