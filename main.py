@@ -6,6 +6,7 @@ import aiohttp
 from dotenv import load_dotenv
 import os
 from discord.ext import commands
+import io
 
 intents = discord.Intents(members=False,presences=False,bans=False,messages=True,emojis=False,guilds=True,integrations=False,invites=False,reactions=False,typing=False,voice_states=False,webhooks=False)
 
@@ -31,6 +32,8 @@ async def get_stick_bugged_lol(ctx, url:Optional[str]):
         else:
             url = ctx.message.attachments[0].url
     img_bytes = await get_bytes(url)
+    img_bytes = io.BytesIO(img_bytes)
+    img_bytes.seek(0)
     img = Image.open(img_bytes,'r')
     await ctx.send('20% done.')
     stick_bug = StickBug(img)
