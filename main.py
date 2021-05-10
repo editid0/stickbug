@@ -9,7 +9,7 @@ from discord.ext import commands
 
 intents = discord.Intents(members=False,presences=False,bans=False,messages=True,emojis=False,guilds=True,integrations=False,invites=False,reactions=False,typing=False,voice_states=False,webhooks=False)
 
-bot = commands.Bot(command_prefix='gsbl ', intents=intents)
+bot = commands.Bot(command_prefix='.', intents=intents)
 
 load_dotenv()
 
@@ -23,7 +23,7 @@ async def get_bytes(url):
 async def on_ready():
     print('Ready.')
 
-@bot.command()
+@bot.command(aliases=['gsbl'])
 async def get_stick_bugged_lol(ctx, url:Optional[str]):
     if not url:
         if not ctx.message.attachments:
