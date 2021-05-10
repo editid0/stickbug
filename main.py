@@ -42,6 +42,6 @@ async def get_stick_bugged_lol(ctx, url:Optional[str]):
 try:
     token = open('token.txt').read().strip()
 except:
-    token = os.genenv('TOKEN').strip()
+    token = os.getenv('TOKEN').strip()
 
 bot.run(token)
