@@ -40,7 +40,7 @@ async def get_stick_bugged_lol(ctx, url:Optional[str]):
     stick_bug = StickBug(img)
     stick_bug.video_resolution = (1280, 720)
     await msg.edit(content='Set video resolution. (75%)')
-    async with ctx.typing:
+    async with ctx.typing():
         stick_bug.save_video(f'vid-{ctx.message.id}.mp4')
     await msg.edit('Processed video. (100%)')
     file = discord.File(f'vid-{ctx.message.id}.mp4')
