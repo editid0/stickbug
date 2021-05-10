@@ -38,8 +38,7 @@ async def get_stick_bugged_lol(ctx, url:Optional[str]):
     await ctx.send('20% done.')
     stick_bug = StickBug(img)
     stick_bug.video_resolution = (1280, 720)
-    vid = stick_bug.video
-    sb.save_video(f'vid-{ctx.message.id}.mp4')
+    stick_bug.save_video(f'vid-{ctx.message.id}.mp4')
     file = discord.File(f'vid-{ctx.message.id}.mp4')
     await ctx.send(file=file)
 
