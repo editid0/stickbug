@@ -1,2 +1,4 @@
 discord
 get-stick-bugged-lol
+Pillow
+python-dotenv
