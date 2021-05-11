@@ -1,13 +1,9 @@
-import discord
+import discord, aiohttp, os, io
 from gsbl.stick_bug import StickBug
 from PIL import Image
 from typing import Optional
-import aiohttp
 from dotenv import load_dotenv
-import os
 from discord.ext import commands
-import io
-from discord.ext.commands.cooldowns import BucketType
 
 intents = discord.Intents(members=False,presences=False,bans=False,messages=True,emojis=False,guilds=True,integrations=False,invites=False,reactions=False,typing=False,voice_states=False,webhooks=False)
 
@@ -30,7 +26,7 @@ async def on_command_error(ctx, error):
     return
 
 @bot.command(aliases=['gsbl'])
-@commands.max_concurrency(1, per=BucketType.default, wait=True)# only 1 command at a time, forms a queue of invokes
+@commands.max_concurrency(1, per=commands.cooldowns.BucketType.default, wait=True)# only 1 command at a time, forms a queue of invokes
 async def get_stick_bugged_lol(ctx, url:Optional[str]):
     if not url:
         if not ctx.message.attachments:
