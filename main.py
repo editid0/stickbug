@@ -1,4 +1,4 @@
-import discord, aiohttp, os, io
+import discord, aiohttp, os, io, time
 from gsbl.stick_bug import StickBug
 from PIL import Image
 from typing import Optional
@@ -33,6 +33,7 @@ async def get_stick_bugged_lol(ctx, url:Optional[str]):
             return await ctx.send('You didn\'t provide an attachment or image url.')
         else:
             url = ctx.message.attachments[0].url
+    start_time = time.perf_counter()
     img_bytes = await get_bytes(url)
     msg = await ctx.send('Fetched image. (25%)')
     img_bytes = io.BytesIO(img_bytes)
@@ -46,7 +47,9 @@ async def get_stick_bugged_lol(ctx, url:Optional[str]):
         stick_bug.save_video(f'vid-{ctx.message.id}.mp4')
     await msg.edit(content='Processed video. (100%)')
     file = discord.File(f'vid-{ctx.message.id}.mp4')
-    await ctx.send(file=file)
+    end_time = time.perf_counter()
+    round_trip = round(float(end_time - start_time), 2)
+    await ctx.send(f'Time taken: {round_trip} seconds.',file=file)
     await msg.delete()
     try:
         os.remove(f'vid-{ctx.message.id}.mp4')
