@@ -27,7 +27,7 @@ async def on_command_error(ctx, error):
 
 @bot.command(aliases=['gsbl'])
 @commands.max_concurrency(1, per=commands.cooldowns.BucketType.default, wait=True)# only 1 command at a time, forms a queue of invokes
-async def get_stick_bugged_lol(ctx, url:Optional[typing.Union[discord.Member, str]]):
+async def get_stick_bugged_lol(ctx, url:Optional[Union[discord.Member, str]]):
     if not url:
         if not ctx.message.attachments:
             return await ctx.send('You didn\'t provide an attachment or image url.')
