@@ -1,7 +1,7 @@
 import discord, aiohttp, os, io, time
 from gsbl.stick_bug import StickBug
 from PIL import Image
-from typing import Optional
+from typing import Optional, Union
 from dotenv import load_dotenv
 from discord.ext import commands
 
@@ -27,12 +27,14 @@ async def on_command_error(ctx, error):
 
 @bot.command(aliases=['gsbl'])
 @commands.max_concurrency(1, per=commands.cooldowns.BucketType.default, wait=True)# only 1 command at a time, forms a queue of invokes
-async def get_stick_bugged_lol(ctx, url:Optional[str]):
+async def get_stick_bugged_lol(ctx, url:Optional[typing.Union[discord.Member, str]]):
     if not url:
         if not ctx.message.attachments:
             return await ctx.send('You didn\'t provide an attachment or image url.')
         else:
             url = ctx.message.attachments[0].url
+    if isinstance(url, discord.Member):
+        url = str(url.avatar_url)
     start_time = time.perf_counter()
     img_bytes = await get_bytes(url)
     msg = await ctx.send('Fetched image. (25%)')
