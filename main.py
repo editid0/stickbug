@@ -6,7 +6,7 @@ from dotenv import load_dotenv
 from discord.ext import commands
 from functools import lru_cache as cache
 
-max_cache_size = 128
+max_cache_size = 2_000_000_000
 
 intents = discord.Intents(members=False,presences=False,bans=False,messages=True,emojis=False,guilds=True,integrations=False,invites=False,reactions=False,typing=False,voice_states=False,webhooks=False)
 
@@ -25,8 +25,8 @@ def do_stickbug(ctx, img):
     img = Image.open(img,'r')
     stick_bug = StickBug(img)
     stick_bug.video_resolution = (1280, 720)#Change to 1920, 1080 if you want 1080p, will take longer
-    return stick_bug.save_video(f'vid-{ctx.message.id}.mp4')
-    # return open(f'vid-{ctx.message.id}.mp4', 'rb')
+    stick_bug.save_video(f'vid-{ctx.message.id}.mp4')
+    return open(f'vid-{ctx.message.id}.mp4', 'rb')
     # return f'vid-{ctx.message.id}.mp4'
 
 @bot.event
@@ -54,8 +54,8 @@ async def get_stick_bugged_lol(ctx, url:Optional[Union[discord.Member, str]]):
     img_bytes = io.BytesIO(img_bytes)
     img_bytes.seek(0)
     async with ctx.typing():
-        do_stickbug(ctx, img_bytes)
-        f = discord.File(fp=open(f'vid-{ctx.message.id}.mp4', 'rb'))
+        i = do_stickbug(ctx, img_bytes)
+        f = discord.File(fp=i)
         await ctx.send(file=f)
         await ctx.send(do_stickbug.cache_info())
         os.remove(f'vid-{ctx.message.id}.mp4')
