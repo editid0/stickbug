@@ -24,15 +24,15 @@ async def get_bytes(url):
     return image_bytes
 
 @cache(maxsize=max_cache_size)
-async def do_stickbug(m_id, url):
+async def do_stickbug(u_id, url):
     img_bytes = await get_bytes(url)
     img_bytes = io.BytesIO(img_bytes)
     img_bytes.seek(0)
     img = Image.open(img_bytes,'r')
     stick_bug = StickBug(img)
     stick_bug.video_resolution = (1280, 720)#Change to 1920, 1080 if you want 1080p, will take longer
-    stick_bug.save_video(f'vid-{m_id}.mp4')
-    return open(f'vid-{m_id}.mp4', 'rb')
+    stick_bug.save_video(f'vid-{u_id}.mp4')
+    return open(f'vid-{u_id}.mp4', 'rb')
     # return f'vid-{ctx.message.id}.mp4'
 
 @bot.event
@@ -56,7 +56,7 @@ async def get_stick_bugged_lol(ctx, url:Optional[Union[discord.Member, str]]):
         url = str(url.avatar_url)
     start_time = time.perf_counter()
     async with ctx.typing():
-        i = await do_stickbug(ctx.message.id, url)
+        i = await do_stickbug(ctx.author.id, url)
         f = discord.File(fp=i)
         await ctx.send(file=f)
         await ctx.send(do_stickbug.cache_info())
