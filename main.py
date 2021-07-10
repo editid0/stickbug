@@ -35,6 +35,7 @@ async def on_ready():
 
 @bot.event
 async def on_command_error(ctx, error):
+    raise error
     return
 
 @bot.command(aliases=['gsbl'])
