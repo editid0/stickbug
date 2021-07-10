@@ -58,11 +58,12 @@ async def get_stick_bugged_lol(ctx, url:Optional[Union[discord.Member, str]]):
     start_time = time.perf_counter()
     async with ctx.typing():
         i = await do_stickbug(ctx.author.id, url)
+        print(type(i))
         # i.seek(0)
         # f = discord.File(fp=i)
         await ctx.send(file=i)
         await ctx.send(do_stickbug.cache_info())
-        os.remove(f'vid-{ctx.message.id}.mp4')
+        os.remove(f'vid-{ctx.author.id}.mp4')
     # await msg.edit(content='Converted image. (50%)')
     # stick_bug = StickBug(img)
     # stick_bug.video_resolution = (1280, 720)
