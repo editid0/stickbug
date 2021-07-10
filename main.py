@@ -4,7 +4,7 @@ from PIL import Image
 from typing import Optional, Union
 from dotenv import load_dotenv
 from discord.ext import commands
-from functools import lru_cache as cache
+from async_lru import alru_cache as cache
 
 max_cache_size = 64
 
@@ -23,13 +23,11 @@ async def get_bytes(url):
     return image_bytes
 
 @cache(maxsize=max_cache_size)
-def do_stickbug(ctx, img):
-    if bot.img1 == None:
-        bot.img1 = img
-        print('saved')
-    else:
-        print(img == bot.img1)
-    img = Image.open(img,'r')
+async def do_stickbug(ctx, url):
+    img_bytes = await get_bytes(url)
+    img_bytes = io.BytesIO(img_bytes)
+    img_bytes.seek(0)
+    img = Image.open(img_bytes,'r')
     stick_bug = StickBug(img)
     stick_bug.video_resolution = (1280, 720)#Change to 1920, 1080 if you want 1080p, will take longer
     stick_bug.save_video(f'vid-{ctx.message.id}.mp4')
@@ -56,12 +54,8 @@ async def get_stick_bugged_lol(ctx, url:Optional[Union[discord.Member, str]]):
     if isinstance(url, discord.Member):
         url = str(url.avatar_url)
     start_time = time.perf_counter()
-    img_bytes = await get_bytes(url)
-    msg = await ctx.send('Fetched image. (25%)')
-    img_bytes = io.BytesIO(img_bytes)
-    img_bytes.seek(0)
     async with ctx.typing():
-        i = do_stickbug(ctx, img_bytes)
+        i = await do_stickbug(ctx, url)
         f = discord.File(fp=i)
         await ctx.send(file=f)
         await ctx.send(do_stickbug.cache_info())
