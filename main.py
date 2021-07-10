@@ -6,11 +6,13 @@ from dotenv import load_dotenv
 from discord.ext import commands
 from functools import lru_cache as cache
 
-max_cache_size = 2_000_000_000
+max_cache_size = 64
 
 intents = discord.Intents(members=False,presences=False,bans=False,messages=True,emojis=False,guilds=True,integrations=False,invites=False,reactions=False,typing=False,voice_states=False,webhooks=False)
 
 bot = commands.Bot(command_prefix='.', intents=intents)
+
+bot.img1 = None
 
 load_dotenv()
 
@@ -22,6 +24,11 @@ async def get_bytes(url):
 
 @cache(maxsize=max_cache_size)
 def do_stickbug(ctx, img):
+    if bot.img1 == None:
+        bot.img1 = img
+        print('saved')
+    else:
+        print(img == bot.img1)
     img = Image.open(img,'r')
     stick_bug = StickBug(img)
     stick_bug.video_resolution = (1280, 720)#Change to 1920, 1080 if you want 1080p, will take longer
