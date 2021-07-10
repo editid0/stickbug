@@ -58,7 +58,7 @@ async def get_stick_bugged_lol(ctx, url:Optional[Union[discord.Member, str]]):
     start_time = time.perf_counter()
     async with ctx.typing():
         i = await do_stickbug(ctx.author.id, url)
-        await ctx.send(len(i.fp.read1()))
+        await ctx.send(len(i.fp.peek()))
         # i.seek(0)
         # f = discord.File(fp=i)
         await ctx.send(file=i)
