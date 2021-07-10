@@ -57,6 +57,7 @@ async def get_stick_bugged_lol(ctx, url:Optional[Union[discord.Member, str]]):
         i = await do_stickbug(ctx, img_bytes)
         f = discord.File(fp=i)
         await ctx.send(file=f)
+        await ctx.send(do_stickbug.cache_info())
         os.remove(f'vid-{ctx.message.id}.mp4')
     # await msg.edit(content='Converted image. (50%)')
     # stick_bug = StickBug(img)
