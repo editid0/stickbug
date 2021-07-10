@@ -4,6 +4,9 @@ from PIL import Image
 from typing import Optional, Union
 from dotenv import load_dotenv
 from discord.ext import commands
+from async_lru import alru_cache as cache
+
+max_cache_size = 128
 
 intents = discord.Intents(members=False,presences=False,bans=False,messages=True,emojis=False,guilds=True,integrations=False,invites=False,reactions=False,typing=False,voice_states=False,webhooks=False)
 
@@ -16,6 +19,15 @@ async def get_bytes(url):
         async with cs.get(str(url)) as response:
             image_bytes = await response.read()
     return image_bytes
+
+@alru_cache(maxsize=max_cache_size)
+async def do_stickbug(ctx, img):
+    stick_bug = StickBug(img)
+    stick_bug.video_resolution = (1280, 720)#Change to 1920, 1080 if you want 1080p, will take longer
+    stick_bug.save_video(f'vid-{ctx.message.id}.mp4')
+    file = discord.File(f'vid-{ctx.message.id}.mp4')
+    os.remove(f'vid-{ctx.message.id}.mp4')
+    return file
 
 @bot.event
 async def on_ready():
@@ -41,22 +53,25 @@ async def get_stick_bugged_lol(ctx, url:Optional[Union[discord.Member, str]]):
     img_bytes = io.BytesIO(img_bytes)
     img_bytes.seek(0)
     img = Image.open(img_bytes,'r')
-    await msg.edit(content='Converted image. (50%)')
-    stick_bug = StickBug(img)
-    stick_bug.video_resolution = (1280, 720)
-    await msg.edit(content='Set video resolution. (75%)')
     async with ctx.typing():
-        stick_bug.save_video(f'vid-{ctx.message.id}.mp4')
-    await msg.edit(content='Processed video. (100%)')
-    file = discord.File(f'vid-{ctx.message.id}.mp4')
-    end_time = time.perf_counter()
-    round_trip = round(float(end_time - start_time), 2)
-    await ctx.send(f'Time taken: {round_trip} seconds.',file=file)
-    await msg.delete()
-    try:
-        os.remove(f'vid-{ctx.message.id}.mp4')
-    except:
-        print('Failed to delete file.')
+        f = do_stickbug(ctx, img)
+        await ctx.send(file=f)
+    # await msg.edit(content='Converted image. (50%)')
+    # stick_bug = StickBug(img)
+    # stick_bug.video_resolution = (1280, 720)
+    # await msg.edit(content='Set video resolution. (75%)')
+    # async with ctx.typing():
+    #     stick_bug.save_video(f'vid-{ctx.message.id}.mp4')
+    # await msg.edit(content='Processed video. (100%)')
+    # file = discord.File(f'vid-{ctx.message.id}.mp4')
+    # end_time = time.perf_counter()
+    # round_trip = round(float(end_time - start_time), 2)
+    # await ctx.send(f'Time taken: {round_trip} seconds.',file=file)
+    # await msg.delete()
+    # try:
+    #     os.remove(f'vid-{ctx.message.id}.mp4')
+    # except:
+    #     print('Failed to delete file.')
 
 try:
     token = open('token.txt').read().strip()
