@@ -26,7 +26,8 @@ async def do_stickbug(ctx, img):
     stick_bug = StickBug(img)
     stick_bug.video_resolution = (1280, 720)#Change to 1920, 1080 if you want 1080p, will take longer
     stick_bug.save_video(f'vid-{ctx.message.id}.mp4')
-    return f'vid-{ctx.message.id}.mp4'
+    return Image.open(f'vid-{ctx.message.id}.mp4')
+    # return f'vid-{ctx.message.id}.mp4'
 
 @bot.event
 async def on_ready():
@@ -53,8 +54,11 @@ async def get_stick_bugged_lol(ctx, url:Optional[Union[discord.Member, str]]):
     img_bytes = io.BytesIO(img_bytes)
     img_bytes.seek(0)
     async with ctx.typing():
-        await do_stickbug(ctx, img_bytes)
-        f = discord.File(f'vid-{ctx.message.id}.mp4')
+        io = io.BytesIO()
+        i = await do_stickbug(ctx, img_bytes)
+        i.save(io, 'PNG')
+        io.seek(0)
+        f = discord.File(fp=io)
         await ctx.send(file=f)
         os.remove(f'vid-{ctx.message.id}.mp4')
     # await msg.edit(content='Converted image. (50%)')
