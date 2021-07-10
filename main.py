@@ -12,7 +12,7 @@ intents = discord.Intents(members=False,presences=False,bans=False,messages=True
 
 bot = commands.Bot(command_prefix='.', intents=intents)
 
-bot.img1 = None
+bot.url1 = None
 
 load_dotenv()
 
@@ -24,6 +24,11 @@ async def get_bytes(url):
 
 @cache(maxsize=max_cache_size)
 async def do_stickbug(ctx, url):
+    if bot.url1 == None:
+        bot.url1 = url
+        print('saved')
+    else:
+        print(bot.url1 == url)
     img_bytes = await get_bytes(url)
     img_bytes = io.BytesIO(img_bytes)
     img_bytes.seek(0)
