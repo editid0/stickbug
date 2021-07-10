@@ -26,7 +26,7 @@ async def do_stickbug(ctx, img):
     stick_bug = StickBug(img)
     stick_bug.video_resolution = (1280, 720)#Change to 1920, 1080 if you want 1080p, will take longer
     stick_bug.save_video(f'vid-{ctx.message.id}.mp4')
-    return open(f'vid-{ctx.message.id}.mp4')
+    return open(f'vid-{ctx.message.id}.mp4', 'rb')
     # return f'vid-{ctx.message.id}.mp4'
 
 @bot.event
