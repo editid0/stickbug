@@ -20,7 +20,7 @@ async def get_bytes(url):
             image_bytes = await response.read()
     return image_bytes
 
-@alru_cache(maxsize=max_cache_size)
+@cache(maxsize=max_cache_size)
 async def do_stickbug(ctx, img):
     stick_bug = StickBug(img)
     stick_bug.video_resolution = (1280, 720)#Change to 1920, 1080 if you want 1080p, will take longer
